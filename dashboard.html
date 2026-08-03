@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel Interno | Plan Ya</title>
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root{
+      --primary:#1567FF;--primary-dark:#0B1D3A;--primary-light:#e8f0ff;
+      --accent:#1567FF;--accent-dark:#0B1D3A;--secondary:#1E293B;
+      --error:#EF4444;--success:#1567FF;--warning:#F59E0B;
+      --navy:#111b2d;--navy-2:#0b1320;--navy-3:#070b13;
+      --navy-border:#1d2d44;--navy-border-2:#273d5a;
+      --bg-light:#F8FAFC;--text-primary:#0F172A;--text-secondary:#475569;
+      --text-muted:#94A3B8;--border:#E2E8F0;
+    }
+    html{scroll-behavior:smooth}
+    .no-scrollbar::-webkit-scrollbar{display:none}
+    .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+    @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+    @keyframes fadeInScale{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+    @keyframes toastIn{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
+    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+    .btn-shimmer{position:relative;overflow:hidden;z-index:1}
+    .btn-shimmer::before{
+      content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
+      animation:shimmer 2.5s infinite;z-index:-1;
+    }
+    .btn-shimmer:hover::before{animation-duration:1.5s}
+
+
+    /* ===== INFINITE LOGO CAROUSELS (JS clona el track y agrega .ready) ===== */
+    .isapre-carousel-wrap,.clinicas-carousel-wrap{overflow:hidden;position:relative;width:100%}
+    .isapre-carousel-track,.clinicas-track{display:flex;width:max-content;align-items:center}
+    .isapre-carousel-track.ready{animation:scroll 32s linear infinite}
+    .clinicas-track.ready{animation:scroll 42s linear infinite}
+    .isapre-carousel-track:hover,.clinicas-track:hover{animation-play-state:paused}
+    .isapre-logo-card{display:flex;align-items:center;justify-content:center;height:48px;width:128px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:0 12px;flex-shrink:0;margin-right:64px}
+    .isapre-logo-card img{max-height:32px;max-width:100%;object-fit:contain}
+    .clinica-card{display:flex;align-items:center;justify-content:center;height:56px;width:144px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:0 12px;flex-shrink:0;margin-right:40px}
+    .clinica-card img{max-height:38px;max-width:100%;object-fit:contain}
+
+    /* ===== HEADER / NAV ===== */
+    .main-nav{display:none;align-items:center;gap:28px}
+    .main-nav a{font-size:12px;font-weight:600;color:#475569;text-decoration:none;white-space:nowrap;transition:color .2s}
+    .main-nav a:hover{color:var(--primary)}
+    .nav-toggle{display:flex;flex-direction:column;justify-content:center;gap:4px;width:32px;height:32px;background:none;border:none;cursor:pointer;padding:4px;flex-shrink:0}
+    .nav-toggle span{display:block;width:100%;height:2px;background:#0f172a;border-radius:2px;transition:all .25s}
+    .nav-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+    .nav-toggle.open span:nth-child(2){opacity:0}
+    .nav-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+    .mobile-nav{display:flex;flex-direction:column;max-height:0;overflow:hidden;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid #f1f5f9;transition:max-height .3s ease;position:sticky;top:64px;z-index:39}
+    .mobile-nav.open{max-height:340px}
+    .mobile-nav a{padding:14px 20px;font-size:14px;font-weight:600;color:#0f172a;text-decoration:none;border-bottom:1px solid #f1f5f9}
+    .mobile-nav a:last-child{border-bottom:none}
+
+    /* ===== FORM STEPS ===== */
+    .form-section{display:none}
+    .form-section.active{display:block}
+    .form-progress-step{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--navy-2);border:1.5px solid var(--navy-border);color:#64748b;transition:all .3s;flex-shrink:0}
+    .form-progress-step.active{border-color:#1567FF;color:var(--primary);box-shadow:0 0 0 4px rgba(21,103,255,.15)}
+    .form-progress-step.done{background:var(--primary);border-color:#1567FF;color:var(--navy-3)}
+    .form-progress-line{flex:1;max-width:48px;height:2px;background:var(--navy-border);transition:background .3s}
+    .form-progress-line.done{background:var(--primary)}
+    .form-help{font-size:11px;color:var(--text-muted);margin-top:4px}
+    .form-help.success{color:#1567FF}
+    .form-help.error{color:#f87171}
+    .fg-row{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:640px){.fg-row{grid-template-columns:1fr 1fr}}
+
+    /* ===== BUTTONS ===== */
+    .btn{display:inline-flex;align-items:center;justify-content:center;width:100%;padding:15px 20px;border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;cursor:pointer;letter-spacing:.6px;transition:all .2s;text-transform:uppercase;text-decoration:none}
+    .btn-primary{background:linear-gradient(135deg,#1567FF 0%,#00C2E0 100%);position:relative;overflow:hidden;color:#0b1320;box-shadow:0 8px 24px rgba(21,103,255,.25)}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(21,103,255,.35)}
+    .btn-primary:active{transform:scale(.98)}
+
+
+    .btn-secondary{background:rgba(29,45,68,.5);color:#94a3b8;border:1px solid var(--navy-border);margin-top:10px;text-transform:none;font-weight:700;letter-spacing:0}
+    .btn-secondary:hover{color:#fff;background:var(--navy-border-2)}
+    .btn-opt{background:var(--navy-2);border:1.5px solid var(--navy-border);color:#94a3b8;border-radius:12px;padding:13px 14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center}
+    .btn-opt:hover{border-color:var(--navy-border-2);color:#e2e8f0}
+    .btn-opt.active{border-color:#1567FF;background:rgba(21,103,255,.14);color:#fff}
+    .btn-group{display:grid;gap:10px}
+    .btn-group.four{grid-template-columns:repeat(4,1fr)}
+
+    /* ===== FORM FIELDS (dark card) ===== */
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-size:11px;font-weight:700;color:#cbd5e1;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+    .form-group input,.form-group select,.form-group textarea{width:100%;background:var(--navy-2);border:1.5px solid var(--navy-border);border-radius:12px;padding:13px 16px;font-size:15px;font-family:'Inter',sans-serif;color:#fff;outline:none;transition:border-color .2s}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(21,103,255,.55)}
+    .form-group input::placeholder,.form-group textarea::placeholder{color:#475569}
+    .form-group select option{background:var(--navy-2);color:#fff}
+    .incentive-banner{display:flex;gap:10px;align-items:flex-start;background:rgba(21,103,255,.08);border:1px solid rgba(21,103,255,.25);border-radius:12px;padding:12px 14px;font-size:13px;color:#1567FF;line-height:1.5;margin-bottom:20px}
+    .incentive-banner .icon{font-size:18px;flex-shrink:0}
+    .incentive-banner strong{color:#fff}
+    .cargas-ages{margin-top:12px;background:var(--navy-2);border:1px solid var(--navy-border);border-radius:12px;padding:14px}
+    .cargas-ages-title{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+    .cargas-ages-row{display:grid;gap:10px}
+    .cargas-ages-row input{background:var(--navy-3);border:1.5px solid var(--navy-border);border-radius:10px;padding:11px 13px;font-size:14px;color:#fff;font-family:'Inter',sans-serif;outline:none;width:100%}
+    .cargas-ages-row input:focus{border-color:rgba(21,103,255,.55)}
+    .wa-wrap{display:flex}
+    .wa-prefix{display:flex;align-items:center;padding:0 14px;background:var(--navy-3);border:1.5px solid var(--navy-border);border-right:none;border-radius:8px 0 0 8px;font-size:14px;color:#94a3b8;font-weight:600;flex-shrink:0}
+
+    /* ===== LEGACY LOADING / RESULTS / SUCCESS (hidden unless .active) ===== */
+    .loading-container{display:none;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center}
+    .loading-container.active{display:flex}
+    .loading-spinner{width:52px;height:52px;border:4px solid var(--navy-border);border-top-color:var(--primary);border-right-color:var(--primary);border-radius:50%;animation:spin 1.1s linear infinite;margin-bottom:20px}
+    .loading-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#fff;margin-bottom:6px}
+    .loading-sub{font-size:13px;color:#94a3b8;max-width:380px;line-height:1.5;margin-bottom:24px}
+    .loading-steps{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;text-align:left}
+    .loading-step{display:flex;align-items:center;gap:10px;font-size:13px;color:#64748b;transition:color .3s}
+    .loading-step-icon{width:22px;height:22px;border-radius:50%;border:2px solid var(--navy-border);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:all .3s}
+    .loading-step.active{color:#1567FF}
+    .loading-step.active .loading-step-icon{border-color:#1567FF;background:var(--primary);color:var(--navy-3)}
+    .loading-step.done{color:#1567FF}
+    .loading-step.done .loading-step-icon{border-color:#1567FF;background:var(--accent);color:#fff}
+    .results-section{display:none}
+    .results-section.active{display:block}
+    .success-screen{display:none;text-align:center;padding:32px 8px}
+    .success-screen.active{display:block}
+    .success-icon{font-size:52px;margin-bottom:14px}
+    .success-screen h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:8px}
+    .success-screen p{font-size:13px;color:#94a3b8;line-height:1.6;max-width:420px;margin:0 auto}
+    .success-countdown{background:rgba(21,103,255,.08);border:1px solid rgba(21,103,255,.25);border-radius:14px;padding:16px;margin:18px auto;max-width:320px}
+    .success-countdown-label{font-size:11px;font-weight:800;color:#1567FF;text-transform:uppercase;letter-spacing:.5px}
+    .success-countdown-value{font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:800;color:#fff;margin-top:4px;font-variant-numeric:tabular-nums}
+    .success-checklist{list-style:none;padding:0;margin:0 auto 18px;max-width:380px;text-align:left;display:flex;flex-direction:column;gap:9px}
+    .success-checklist li{font-size:13px;color:#cbd5e1;padding-left:26px;position:relative}
+    .success-checklist li::before{content:'✓';position:absolute;left:0;width:18px;height:18px;border-radius:50%;background:rgba(21,103,255,.15);color:#1567FF;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:6px}
+
+    /* ===== PROFILE RESULT (legacy) ===== */
+    .profile-result{background:var(--navy-2);border:1px solid var(--navy-border);border-radius:20px;padding:28px 22px;text-align:center;margin-bottom:16px}
+    .profile-badge{font-size:52px;margin-bottom:10px}
+    .profile-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800}
+    .profile-desc{font-size:13px;color:#94a3b8;margin-top:4px}
+    .profile-insight{font-size:13px;color:#cbd5e1;font-style:italic;background:rgba(21,103,255,.07);border:1px solid rgba(21,103,255,.2);border-radius:12px;padding:14px;margin-top:14px;line-height:1.5}
+    .profile-expectations{list-style:none;padding:0;margin:14px 0 0;text-align:left;display:flex;flex-direction:column;gap:8px}
+    .profile-expectations li{font-size:13px;color:#cbd5e1;padding-left:22px;position:relative}
+    .profile-expectations li::before{content:'✓';position:absolute;left:0;color:#1567FF;font-weight:800}
+    .alt-profiles-title{font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 10px;text-align:center}
+    .alt-profile-card{background:var(--navy-2);border:1px solid var(--navy-border);border-radius:14px;padding:14px;cursor:pointer;transition:border-color .2s;margin-bottom:10px}
+    .alt-profile-card:hover{border-color:rgba(21,103,255,.4)}
+    .alt-profile-header{display:flex;align-items:center;gap:12px}
+    .alt-profile-icon{font-size:26px}
+    .alt-profile-name{font-size:15px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
+    .alt-profile-desc{font-size:12px;color:#94a3b8}
+    .video-section{margin-top:24px;background:var(--navy-2);border:1px solid var(--navy-border);border-radius:20px;padding:24px;text-align:center}
+    .video-section h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#fff;margin-bottom:4px}
+    .video-subtitle{font-size:12px;color:#94a3b8;margin-bottom:16px}
+    .video-container{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:14px;border:1px solid var(--navy-border)}
+    .video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+    .video-cta{margin-top:14px;font-size:12px;color:#94a3b8;display:flex;flex-direction:column;gap:4px}
+    .share-section{margin-top:24px;text-align:center}
+    .share-section h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#fff;margin-bottom:14px}
+    .share-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:400px;margin:0 auto}
+    @media(min-width:640px){.share-grid{grid-template-columns:repeat(4,1fr)}}
+    .share-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:none;border-radius:12px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;color:#fff;transition:transform .15s}
+    .share-btn:hover{transform:translateY(-1px)}
+    .share-wa{background:#25d366}.share-fb{background:#1877f2}.share-tw{background:#1da1f2}.share-li{background:#0a66c2}
+    .fonasa-suggestion{text-align:center;padding:24px 16px}
+    .fonasa-suggestion .icon{font-size:44px;margin-bottom:12px}
+    .fonasa-suggestion h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-bottom:8px}
+    .fonasa-suggestion p{font-size:13px;color:#94a3b8;line-height:1.6}
+    .btn-fonasa{margin-top:16px;display:inline-block;background:linear-gradient(135deg,#00C2E0,#0B1D3A);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif}
+  
+    /* Fintech Typography */
+    h1,h2,h3,h4,h5,h6,.font-display,[class*="font-display"]{font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em}
+    .text-5xl,.text-6xl,.lg\:text-6xl,.sm\:text-5xl{letter-spacing:-0.03em}
+    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+</style>
+
+  <style>
+    /* ===== FAQ ACCORDION (dark) ===== */
+    .faq-row{border:1px solid var(--navy-border);border-radius:16px;overflow:hidden;background:rgba(11,19,32,.4);transition:border-color .2s}
+    .faq-row:hover{border-color:var(--navy-border-2)}
+    .faq-row.open{border-color:rgba(21,103,255,.45)}
+    .faq-q{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;transition:background .15s}
+    .faq-row.open .faq-q{background:rgba(21,103,255,.04)}
+    .faq-q-left{display:flex;align-items:center;gap:12px}
+    .faq-q-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:var(--navy-border)}
+    .faq-row.open .faq-q-icon{background:rgba(21,103,255,.15)}
+    .faq-q-text{font-size:14px;font-weight:700;color:#fff;line-height:1.3}
+    .faq-chev{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--navy-border-2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-muted);transition:all .25s;flex-shrink:0}
+    .faq-row.open .faq-chev{transform:rotate(180deg);background:var(--primary);border-color:#1567FF;color:var(--navy-3)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .faq-row.open .faq-a{max-height:280px}
+    .faq-a-inner{padding:0 20px 18px;font-size:13px;color:#cbd5e1;line-height:1.65;font-weight:300}
+    .faq-a-inner strong{color:#1567FF}
+
+    /* ===== TESTIMONIALS CAROUSEL ===== */
+    .carousel-container{position:relative;overflow:hidden}
+    .carousel-track{display:flex}
+    .carousel-slide{min-width:100%;opacity:0;transition:opacity .4s ease;position:absolute;top:0;left:0;pointer-events:none}
+    .carousel-slide.active{opacity:1;position:relative;pointer-events:auto}
+    .testimonial-card-carousel{background:var(--navy);border:1px solid var(--navy-border);border-radius:24px;padding:22px;color:#fff}
+    .tc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+    .tc-left{display:flex;align-items:center;gap:10px}
+    .tc-avatar{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#0b1320;flex-shrink:0}
+    .tc-name{font-size:14px;font-weight:700;color:#fff;line-height:1.2}
+    .tc-date{font-size:11px;color:#64748b;margin-top:2px}
+    .google-g{width:20px;height:20px;flex-shrink:0}
+    .google-stars-bar{color:#FBBC04;font-size:16px;letter-spacing:1px}
+    .google-rating-text{font-size:13px;font-weight:700;color:var(--text-primary)}
+    .google-rating-count{font-size:12px;color:var(--text-muted)}
+    .tc-verified{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#94a3b8;margin-bottom:8px}
+    .tc-verified svg{flex-shrink:0}
+    .tc-stars{color:#FBBC04;font-size:15px;letter-spacing:2px;margin-bottom:10px}
+    .tc-body{font-size:13px;color:#cbd5e1;line-height:1.65;margin-bottom:14px;font-weight:300}
+    .tc-result{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;background:rgba(11,19,32,.8);border-radius:12px;padding:12px;align-items:center;border:1px solid var(--navy-border)}
+    .tc-res-item{text-align:center}
+    .tc-res-label{font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+    .tc-res-value{font-size:14px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
+    .tc-res-value.red{color:#f87171}
+    .tc-res-value.green{color:#1567FF}
+    .tc-res-isapre{font-size:9px;color:#64748b;margin-top:1px}
+    .tc-res-divider{width:1px;height:30px;background:var(--navy-border)}
+    .carousel-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:24px}
+    .carousel-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:#fff;color:#475569;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+    .carousel-btn:hover{border-color:#1567FF;color:var(--primary)}
+    .carousel-btn:active{transform:scale(.95)}
+    .carousel-dots{display:flex;gap:8px}
+    .carousel-dot{width:8px;height:8px;border-radius:50%;background:#cbd5e1;cursor:pointer;transition:all .3s}
+    .carousel-dot.active{background:var(--primary);transform:scale(1.25)}
+
+    /* ===== FLOATING WHATSAPP + SOCIAL TOAST ===== */
+    .whatsapp-float{position:fixed;right:18px;bottom:18px;z-index:55;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 10px 24px rgba(37,211,102,.4);transition:transform .2s;text-decoration:none}
+    .whatsapp-float:hover{transform:scale(1.08)}
+    .social-toast{position:fixed;left:16px;bottom:16px;z-index:60;display:none;align-items:center;gap:10px;background:var(--navy);border:1px solid var(--navy-border);border-radius:14px;padding:12px 16px;box-shadow:0 20px 40px rgba(2,6,23,.4);color:#fff;font-size:13px}
+    .social-toast.active{display:flex;animation:toastIn .4s ease}
+    .social-toast .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1567FF,#00C2E0);display:flex;align-items:center;justify-content:center;font-size:14px;color:#0b1320;font-weight:800;flex-shrink:0}
+    .social-toast small{color:#94a3b8}
+
+    /* ===== DASHBOARD: LOGIN ===== */
+    .login-screen{min-height:82vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .login-card{background:var(--navy);border:1px solid var(--navy-border);border-radius:24px;padding:36px 32px;width:100%;max-width:400px;text-align:center;box-shadow:0 24px 60px rgba(2,6,23,.25)}
+    .login-card h2{font-family:'Plus Jakarta Sans',sans-serif;color:#fff;font-size:20px;font-weight:800;margin:16px 0 6px}
+    .login-card>p{font-size:13px;color:#94a3b8;margin-bottom:22px}
+    .login-card .form-group{text-align:left}
+    .login-error{display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);color:#fca5a5;font-size:12px;border-radius:10px;padding:10px;margin-top:12px}
+    .login-error.active{display:block}
+
+    /* ===== DASHBOARD: MAIN ===== */
+    .dashboard-header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--navy);border:1px solid var(--navy-border);border-radius:20px;padding:14px 20px;margin-bottom:18px;flex-wrap:wrap}
+    .dashboard-header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .dashboard-badge{font-size:10px;font-weight:800;color:#1567FF;background:rgba(21,103,255,.12);border:1px solid rgba(21,103,255,.3);padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+    .dashboard-user{font-size:12px;font-weight:700;color:#e2e8f0}
+    .dashboard-logout{font-size:11px;font-weight:700;color:#fca5a5;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);padding:6px 12px;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s}
+    .dashboard-logout:hover{background:rgba(239,68,68,.2)}
+    .dashboard-banner{display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(135deg,#111b2d,#0a111e);border:1px solid var(--navy-border);border-radius:20px;padding:22px 24px;margin-bottom:18px;flex-wrap:wrap}
+    .dashboard-banner h3{font-family:'Plus Jakarta Sans',sans-serif;color:#fff;font-size:18px;font-weight:800}
+    .dashboard-banner p{font-size:12px;color:#94a3b8;margin-top:2px}
+    .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
+    @media(min-width:900px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
+    .kpi-card{background:var(--navy);border:1px solid var(--navy-border);border-radius:18px;padding:18px;transition:border-color .2s}
+    .kpi-card:hover{border-color:rgba(21,103,255,.35)}
+    .kpi-icon{font-size:22px;margin-bottom:8px}
+    .kpi-value{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#fff;line-height:1}
+    .kpi-label{font-size:11px;color:#94a3b8;margin-top:6px;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+    .kpi-change{font-size:11px;margin-top:6px;font-weight:600}
+    .kpi-change.up{color:#1567FF}
+    .filters-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    .search-input{flex:1;min-width:200px;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;font-size:13px;font-family:'Inter',sans-serif;outline:none;color:var(--text-primary)}
+    .search-input:focus{border-color:#1567FF}
+    .filter-select{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:11px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;cursor:pointer;color:var(--text-primary)}
+    .filter-btn{background:var(--navy);color:#fff;border:1px solid var(--navy-border);border-radius:12px;padding:11px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s}
+    .filter-btn:hover{background:var(--navy-border-2)}
+    .leads-table-wrap{background:#fff;border:1px solid var(--border);border-radius:18px;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .leads-table{width:100%;border-collapse:collapse;min-width:880px}
+    .leads-table th{background:#f8fafc;text-align:left;font-size:10px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;padding:12px 14px;border-bottom:1px solid var(--border);white-space:nowrap}
+    .leads-table td{padding:14px;font-size:13px;color:var(--text-primary);border-bottom:1px solid #f1f5f9;vertical-align:middle}
+    .leads-table tr:last-child td{border-bottom:none}
+    .lead-time{font-size:10px;color:var(--text-muted);margin-top:2px}
+    .contact-info{font-size:12px}
+    .contact-detail{display:block;font-size:10px;color:var(--text-muted);margin-top:2px}
+    .plan-rec{font-size:12px;font-weight:700}
+    .plan-isapre{display:block;font-size:10px;color:var(--primary-dark);font-weight:700;margin-top:2px}
+    .score-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;border-radius:8px;font-size:12px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
+    .score-high{background:#e8f0ff;color:#0B1D3A}
+    .score-mid{background:#fef3c7;color:#b45309}
+    .score-low{background:#fee2e2;color:#b91c1c}
+    .cat-badge{display:inline-block;font-size:9px;font-weight:800;padding:4px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+    .cat-upgrade{background:#dbeafe;color:#1d4ed8}
+    .cat-downgrade{background:#fef3c7;color:#b45309}
+    .cat-same{background:#f1f5f9;color:#475569}
+    .cat-fonasa{background:#ede9fe;color:#6d28d9}
+    .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+    .status-new{background:#1567FF}
+    .status-contacted{background:#f59e0b}
+    .status-closed{background:#ef4444}
+    .action-bts{display:flex;gap:6px}
+    .action-btn{border:none;border-radius:9px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+    .action-btn-wa{background:#e8f0ff;color:#0B1D3A}
+    .action-btn-wa:hover{background:#d6e4ff}
+    .action-btn-view{background:#e0f2fe;color:#0369a1}
+    .action-btn-view:hover{background:#bae6fd}
+    .empty-state{text-align:center;padding:48px 20px}
+    .empty-state-icon{font-size:40px;margin-bottom:10px}
+    .empty-state h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--text-primary)}
+    .empty-state p{font-size:12px;color:var(--text-muted);margin-top:4px}
+    .pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px}
+    .pagination-btn{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;color:var(--text-secondary)}
+    .pagination-btn:disabled{opacity:.4;cursor:not-allowed}
+    .pagination-info{font-size:12px;color:var(--text-muted);font-weight:600}
+
+    /* ===== LEAD DETAIL MODAL ===== */
+    .modal-overlay{position:fixed;inset:0;z-index:80;background:rgba(2,6,23,.75);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+    .modal-overlay.active{display:flex}
+    .modal-card{background:#fff;border-radius:22px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:1}
+    .modal-header h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--text-primary)}
+    .modal-close{background:#f1f5f9;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:13px;color:var(--text-secondary)}
+    .modal-body{padding:20px 22px}
+    .modal-section{margin-bottom:20px}
+    .modal-section-title{font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px dashed var(--border)}
+    .modal-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .modal-info-item{background:#f8fafc;border:1px solid #eef2f7;border-radius:10px;padding:10px 12px}
+    .modal-info-item .label{font-size:9px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+    .modal-info-item .value{font-size:13px;font-weight:700;color:var(--text-primary)}
+    .modal-full-width{grid-column:1/-1}
+    .dash-toast{position:fixed;bottom:20px;right:20px;z-index:90;display:flex;align-items:center;gap:8px;background:var(--navy);border:1px solid var(--navy-border);color:#fff;padding:12px 18px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 16px 32px rgba(2,6,23,.4);opacity:0;transform:translateY(12px);pointer-events:none;transition:all .3s}
+    .dash-toast.active{opacity:1;transform:none}
+
+    /* ===== MISC ===== */
+    .calc-result-dark.show{display:block !important}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.active{opacity:1;transform:none}
+
+
+
+
+    /* ===== HERO TEXT ROTATOR ===== */
+    .hero-text-rotator {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-text-rotator .rotator-word {
+      display: inline;
+      position: relative;
+      color: #1567FF;
+    }
+    .hero-text-rotator .rotator-word::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #1567FF, #00C2E0);
+      border-radius: 2px;
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: underlineGrow 0.6s ease-out 0.4s forwards;
+    }
+    @keyframes underlineGrow {
+      to { transform: scaleX(1); }
+    }
+
+    /* Text fade transition */
+    .hero-fade-text {
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-block;
+    }
+    .hero-fade-text.fade-out {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    .hero-fade-text.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Cursor blink for typewriter effect on mobile */
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 1.75rem !important;
+        line-height: 1.2 !important;
+      }
+      .hero-text-rotator .rotator-word::after {
+        height: 2px;
+      }
+    }
+
+    /* ===== SCROLL ANIMATIONS ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInBlur {
+      from { opacity: 0; filter: blur(8px); transform: translateY(30px); }
+      to { opacity: 1; filter: blur(0); transform: translateY(0); }
+    }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(21,103,255,0.4); }
+      50% { box-shadow: 0 0 20px 4px rgba(21,103,255,0.15); }
+    }
+
+    /* Scroll-triggered reveals */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .scroll-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .scroll-scale.revealed {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Hero entrance animations */
+    .hero-badge { opacity: 0; animation: fadeInDown 0.6s ease-out 0.2s both, floatY 3s ease-in-out 1s infinite; }
+    .hero-title { opacity: 0; animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+    .hero-subtitle { opacity: 0; animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both; }
+    .hero-cta { opacity: 0; animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both; }
+    .hero-social { opacity: 0; animation: fadeInUp 0.6s ease-out 0.9s both; }
+    .hero-calc { opacity: 0; animation: slideInBlur 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both; }
+    .hero-glow-1 { animation: pulseGlow 4s ease-in-out infinite; }
+    .hero-glow-2 { animation: pulseGlow 4s ease-in-out 2s infinite; }
+
+    /* Card hover lift effect */
+    .card-lift {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    }
+    .card-lift:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(21, 103, 255, 0.12);
+    }
+
+    /* Mobile-specific */
+    @media (max-width: 640px) {
+      .hero-title { font-size: 2rem !important; line-height: 1.15 !important; }
+      .scroll-reveal { transform: translateY(20px); }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .scroll-reveal, .scroll-scale {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .reveal{transition:none;opacity:1;transform:none}
+      .isapre-carousel-track.ready,.clinicas-track.ready{animation:none}
+    }
+  
+    /* Button shimmer effect */
+    
+    /* Button press effect */
+    .btn-press:active {
+      transform: scale(0.98) !important;
+    }
+</style>
+</head>
+<body class="bg-[#0b1320] font-sans antialiased" style="min-height:100vh;">
+
+  <div id="dashboard-view" class="view flex-grow">
+
+    <!-- LOGIN -->
+    <div class="login-screen" id="dashboard-login">
+      <div class="login-card">
+        <div class="flex items-center justify-center gap-2">
+          <img src="https://res.cloudinary.com/dbzmwrh5d/image/upload/v1784587413/LOGOPLANYA_nbjsoy.png" alt="Plan Ya" class="h-10 w-10 rounded-xl object-cover shadow-md" style="background:#011233;">
+          <div class="text-left">
+            <span class="block text-base font-black font-display tracking-tight text-white leading-none">Plan Ya</span>
+            <span class="block text-[9px] font-bold bg-gradient-to-r from-[#1567FF] to-[#00C2E0] bg-clip-text text-transparent uppercase tracking-widest mt-0.5">Panel Interno</span>
+          </div>
+        </div>
+        <h2 id="loginTitle">Dashboard de Asesor</h2>
+        <p id="loginSubtitle">Ingresa tu contraseña para acceder</p>
+        <div style="display:flex;gap:8px;margin-bottom:20px;background:var(--navy-2);border:1px solid var(--navy-border);border-radius:12px;padding:4px;">
+          <button type="button" id="tabAsesor" onclick="switchLoginRole('asesor')" style="flex:1;padding:10px 12px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;background:var(--primary);color:var(--navy-3);">👤 Asesor</button>
+          <button type="button" id="tabEjecutivo" onclick="switchLoginRole('ejecutivo')" style="flex:1;padding:10px 12px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;background:transparent;color:#94a3b8;">💼 Ejecutivo</button>
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="dashboardPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginDashboard()">
+        </div>
+        <button class="btn btn-primary transition-all duration-200 hover:-translate-y-0.5" onclick="loginDashboard()">Ingresar</button>
+        <div class="login-error" id="loginError">Contraseña incorrecta. Inténtalo de nuevo.</div>
+        <a class="btn btn-secondary" href="index.html" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">&#8592; Volver al sitio</a>
+      </div>
+    </div>
+
+    <!-- DASHBOARD MAIN -->
+    <div id="dashboard-main" style="display:none;">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+
+        <div class="dashboard-header">
+          <div class="flex items-center gap-2">
+            <img src="https://res.cloudinary.com/dbzmwrh5d/image/upload/v1784587413/LOGOPLANYA_nbjsoy.png" alt="Plan Ya" class="h-9 w-9 rounded-xl object-cover" style="background:#011233;">
+            <div>
+              <span class="block text-sm font-black font-display tracking-tight text-white leading-none">Plan Ya</span>
+              <span class="block text-[9px] font-bold bg-gradient-to-r from-[#1567FF] to-[#00C2E0] bg-clip-text text-transparent uppercase tracking-widest mt-0.5">CRM Asesores</span>
+            </div>
+          </div>
+          <div class="dashboard-header-right">
+            <span class="dashboard-badge">🔒 Privado</span>
+            <span class="dashboard-user" id="dashboardUserLabel">👤 Asesor</span>
+            <button class="dashboard-logout" onclick="logoutDashboard()">Cerrar sesión</button>
+          </div>
+        </div>
+
+        <div class="dashboard-banner">
+          <div>
+            <h3>Leads de Evaluaciones</h3>
+            <p>Gestiona los contactos que completaron el diagnóstico de ISAPRE</p>
+          </div>
+          <a class="filter-btn" href="index.html" style="display:inline-flex;align-items:center;text-decoration:none;">🌐 Ver sitio cliente</a>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon">👥</div>
+            <div class="kpi-value" id="kpiLeads">0</div>
+            <div class="kpi-label">Leads Totales</div>
+            <div class="kpi-change up" id="kpiLeadsChange">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">⭐</div>
+            <div class="kpi-value" id="kpiScore">0</div>
+            <div class="kpi-label">Score Promedio</div>
+            <div class="kpi-change up" id="kpiScoreTrend">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-value" id="kpiVLP">$0</div>
+            <div class="kpi-label">VLP Estimado</div>
+            <div class="kpi-change up" id="kpiVLPTrend">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">📈</div>
+            <div class="kpi-value" id="kpiConversion">0%</div>
+            <div class="kpi-label">Conversión</div>
+            <div class="kpi-change up" id="kpiConversionTrend">—</div>
+          </div>
+        </div>
+
+        <div class="filters-bar">
+          <input type="text" class="search-input" id="leadSearch" placeholder="🔍 Buscar por nombre, teléfono o email..." oninput="filterLeads()">
+          <select class="filter-select" id="filterCategory" onchange="filterLeads()">
+            <option value="">Categoría: Todas</option>
+            <option value="upgrade">Upgrade</option>
+            <option value="downgrade">Downgrade</option>
+            <option value="same">Mantener</option>
+            <option value="fonasa">Fonasa</option>
+          </select>
+          <select class="filter-select" id="filterStatus" onchange="filterLeads()">
+            <option value="">Estado: Todos</option>
+            <option value="new">Nuevo</option>
+            <option value="contacted">Contactado</option>
+            <option value="closed">Cerrado</option>
+          </select>
+          <select class="filter-select" id="filterIsapre" onchange="filterLeads()">
+            <option value="">ISAPRE: Todas</option>
+            <option value="Colmena">Colmena</option>
+            <option value="Consalud">Consalud</option>
+            <option value="Cruz Blanca">Cruz Blanca</option>
+            <option value="Nueva Más Vida">Nueva Más Vida</option>
+            <option value="Vida Tres">Vida Tres</option>
+            <option value="Esencial">Esencial</option>
+            <option value="Fonasa">Fonasa</option>
+          </select>
+          <button class="filter-btn" onclick="exportLeadsCSV()">⬇ Exportar CSV</button>
+          <button class="filter-btn" onclick="refreshLeads()">🔄 Actualizar</button>
+        </div>
+
+        <div class="leads-table-wrap">
+          <table class="leads-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Nombre</th>
+                <th>Contacto</th>
+                <th>Plan Recomendado</th>
+                <th>Score</th>
+                <th>Categoría</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+            </tbody>
+          </table>
+          <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-state-icon">📭</div>
+            <h4>No hay leads todavía</h4>
+            <p>Los contactos que completen la evaluación aparecerán aquí.</p>
+          </div>
+        </div>
+
+        <div class="pagination" id="pagination" style="display:none;">
+          <button class="pagination-btn" id="prevPage" onclick="changePage(-1)">&#8592; Anterior</button>
+          <span class="pagination-info" id="pageInfo">Página 1 de 1</span>
+          <button class="pagination-btn" id="nextPage" onclick="changePage(1)">Siguiente &#8594;</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- ===== END DASHBOARD VIEW ===== -->
+
+  <!-- LEAD DETAIL MODAL -->
+  <div class="modal-overlay" id="leadModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Detalle del Lead</h3>
+        <button class="modal-close" onclick="closeLeadModal()">✕</button>
+      </div>
+      <div class="modal-body" id="leadModalBody">
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD TOAST -->
+  <div class="dash-toast" id="dashToast">
+    <span id="dashToastIcon">✓</span>
+    <span id="dashToastText">Acción completada</span>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Botón "Ver sitio cliente" -> ahora es un link real a index.html (ver markup arriba)
+
+async function syncWithServer() {
+    showDashToast('🔄', 'Sincronizando datos...');
+    await loadLeads();
+    filterLeads();
+    updateKPIs();
+    showDashToast('✅', allLeads.length + ' leads cargados desde localStorage');
+}
+
+function refreshLeads() {
+    syncWithServer();
+}
+
+// ===================== DASHBOARD SYSTEM =====================
+const DASHBOARD_PASSWORD = 'iplan2026';
+const EXECUTIVE_PASSWORD = 'exec2026';
+const STORAGE_KEY = 'iplan_leads_v1';
+let currentPage = 1;
+let leadsPerPage = 10;
+let filteredLeads = [];
+let allLeads = [];
+
+// ===================== AUTH =====================
+let currentLoginRole = 'asesor';
+function switchLoginRole(role) {
+    currentLoginRole = role;
+    const tabA = document.getElementById('tabAsesor'), tabE = document.getElementById('tabEjecutivo');
+    const title = document.getElementById('loginTitle'), sub = document.getElementById('loginSubtitle');
+    if (role === 'asesor') {
+        tabA.style.background = 'var(--primary)'; tabA.style.color = 'var(--navy-3)';
+        tabE.style.background = 'transparent'; tabE.style.color = '#94a3b8';
+        title.textContent = 'Dashboard de Asesor'; sub.textContent = 'Ingresa tu contraseña para acceder';
+    } else {
+        tabE.style.background = 'var(--primary)'; tabE.style.color = 'var(--navy-3)';
+        tabA.style.background = 'transparent'; tabA.style.color = '#94a3b8';
+        title.textContent = 'Dashboard Ejecutivo'; sub.textContent = 'Acceso exclusivo para ejecutivos';
+    }
+    document.getElementById('loginError').classList.remove('active');
+}
+function loginDashboard() {
+    const input = document.getElementById('dashboardPassword');
+    const error = document.getElementById('loginError');
+    const valid = currentLoginRole === 'ejecutivo' ? EXECUTIVE_PASSWORD : DASHBOARD_PASSWORD;
+    if (input.value === valid) {
+        sessionStorage.setItem('dashboard_auth', 'true');
+        sessionStorage.setItem('dashboard_role', currentLoginRole);
+        error.classList.remove('active');
+        showDashboardMain();
+        showDashToast('✅', currentLoginRole === 'ejecutivo' ? 'Bienvenido al Dashboard Ejecutivo' : 'Bienvenido al Dashboard de Asesor');
+    } else {
+        error.classList.add('active'); input.value = ''; input.focus();
+    }
+}
+
+function logoutDashboard() {
+    sessionStorage.removeItem('dashboard_auth');
+    sessionStorage.removeItem('dashboard_role');
+    document.getElementById('dashboard-login').style.display = 'flex';
+    document.getElementById('dashboard-main').style.display = 'none';
+    document.getElementById('dashboardPassword').value = '';
+}
+
+async function showDashboardMain() {
+    document.getElementById('dashboard-login').style.display = 'none';
+    document.getElementById('dashboard-main').style.display = 'block';
+    const role = sessionStorage.getItem('dashboard_role') || 'asesor';
+    const lbl = document.getElementById('dashboardUserLabel');
+    if (lbl) lbl.textContent = role === 'ejecutivo' ? '💼 Ejecutivo' : '👤 Asesor';
+    await loadLeads(); updateKPIs(); renderLeadsTable();
+}
+
+function checkDashboardAuth() {
+    if (sessionStorage.getItem('dashboard_auth') === 'true') {
+        showDashboardMain();
+    }
+}
+
+async function loadLeads() {
+    // El dashboard lee desde localStorage (backup local)
+    // Los leads se guardan en Google Sheets + localStorage simultáneamente
+    // Para ver todos los leads, abre tu Google Sheet o exporta CSV desde allí
+    allLeads = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    filteredLeads = allLeads.slice();
+}
+
+// ===================== KPIs =====================
+function updateKPIs() {
+    var totalLeads = allLeads.length;
+    var avgScore = totalLeads > 0 ? Math.round(allLeads.reduce(function(sum, l) { return sum + (l.score || 0); }, 0) / totalLeads) : 0;
+    var totalVLP = allLeads.reduce(function(sum, l) { return sum + (l.vlp || 0); }, 0);
+    var conversionRate = totalLeads > 0 ? Math.round((allLeads.filter(function(l) { return l.status === 'closed'; }).length / totalLeads) * 100) : 4;
+
+    var today = new Date().toDateString();
+    var todayLeads = allLeads.filter(function(l) { return new Date(l.createdAt).toDateString() === today; }).length;
+
+    document.getElementById('kpiLeads').textContent = totalLeads;
+    document.getElementById('kpiLeadsChange').textContent = todayLeads > 0 ? '+' + todayLeads + ' hoy' : '+0 hoy';
+    document.getElementById('kpiScore').textContent = avgScore;
+    document.getElementById('kpiVLP').textContent = '$' + (totalVLP / 1000000).toFixed(1) + 'M';
+    document.getElementById('kpiConversion').textContent = conversionRate + '%';
+}
+
+// ===================== TABLE RENDERING =====================
+function renderLeadsTable() {
+    var tbody = document.getElementById('leadsTableBody');
+    var emptyState = document.getElementById('emptyState');
+    var pagination = document.getElementById('pagination');
+
+    if (filteredLeads.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.style.display = 'block';
+        pagination.style.display = 'none';
+        return;
+    }
+
+    emptyState.style.display = 'none';
+
+    var totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
+    var start = (currentPage - 1) * leadsPerPage;
+    var pageLeads = filteredLeads.slice(start, start + leadsPerPage);
+
+    tbody.innerHTML = pageLeads.map(function(lead) { return renderLeadRow(lead); }).join('');
+
+    if (totalPages > 1) {
+        pagination.style.display = 'flex';
+        document.getElementById('pageInfo').textContent = 'Página ' + currentPage + ' de ' + totalPages;
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === totalPages;
+    } else {
+        pagination.style.display = 'none';
+    }
+}
+
+function renderLeadRow(lead) {
+    var scoreClass = lead.score >= 80 ? 'score-high' : lead.score >= 60 ? 'score-mid' : 'score-low';
+    var catClass = 'cat-' + (lead.categoria || 'same');
+    var catLabel = {
+        'upgrade': 'UPGRADE',
+        'downgrade': 'DOWNGRADE',
+        'same': 'MISMO NIVEL',
+        'fonasa': 'FONASA → ISAPRE'
+    }[lead.categoria || 'same'];
+
+    var statusDot = {
+        'new': '<span class="status-dot status-new"></span>',
+        'contacted': '<span class="status-dot status-contacted"></span>',
+        'closed': '<span class="status-dot status-closed"></span>'
+    }[lead.status || 'new'];
+
+    var statusLabel = {
+        'new': 'Nuevo',
+        'contacted': 'Contactado',
+        'closed': 'Cerrado'
+    }[lead.status || 'new'];
+
+    var timeAgo = getTimeAgo(lead.createdAt);
+    var ingresos = parseInt((lead.renta || '0').replace(/\D/g, '')) || 0;
+    var pago = parseInt((lead.cuantoPagas || '0').replace(/\D/g, '')) || 0;
+
+    return '<tr data-id="' + lead.id + '">' +
+        '<td><span class="score-badge ' + scoreClass + '">' + lead.score + '</span></td>' +
+        '<td><strong>' + escapeHtml(lead.nombre || 'Sin nombre') + '</strong><div class="lead-time">' + timeAgo + '</div></td>' +
+        '<td class="contact-info">' + escapeHtml(lead.email || 'Sin email') + '<span class="contact-detail">+56 9 ' + escapeHtml(lead.telefono || 'XXXX XXXX') + '</span></td>' +
+        '<td><strong>$' + (ingresos / 1000000).toFixed(1) + 'M</strong><span class="contact-detail">Paga: $' + pago.toLocaleString('es-CL') + '</span></td>' +
+        '<td><span class="cat-badge ' + catClass + '">' + catLabel + '</span></td>' +
+        '<td class="plan-rec">' + escapeHtml(lead.planRecomendado || 'Por definir') + '<span class="plan-isapre">' + escapeHtml(lead.planIsapre || '') + '</span></td>' +
+        '<td>' + statusDot + statusLabel + '</td>' +
+        '<td><div class="action-bts"><button class="action-btn action-btn-wa" onclick="contactLeadWA(\'' + lead.id + '\')">📱 Contactar</button><button class="action-btn action-btn-view" onclick="viewLeadDetail(\'' + lead.id + '\')">Ver</button></div></td>' +
+    '</tr>';
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function getTimeAgo(dateString) {
+    if (!dateString) return 'Reciente';
+    var date = new Date(dateString);
+    var now = new Date();
+    var diff = Math.floor((now - date) / 1000);
+
+    if (diff < 60) return 'Hace segundos';
+    if (diff < 3600) return 'Hace ' + Math.floor(diff / 60) + ' min';
+    if (diff < 86400) return 'Hace ' + Math.floor(diff / 3600) + ' h';
+    if (diff < 604800) return 'Hace ' + Math.floor(diff / 86400) + ' d';
+    return date.toLocaleDateString('es-CL');
+}
+
+// ===================== FILTERS =====================
+function filterLeads() {
+    var search = document.getElementById('leadSearch').value.toLowerCase();
+    var category = document.getElementById('filterCategory').value;
+    var status = document.getElementById('filterStatus').value;
+    var isapre = document.getElementById('filterIsapre').value;
+
+    filteredLeads = allLeads.filter(function(lead) {
+        var matchesSearch = !search || 
+            (lead.nombre || '').toLowerCase().indexOf(search) >= 0 ||
+            (lead.email || '').toLowerCase().indexOf(search) >= 0 ||
+            (lead.rut || '').toLowerCase().indexOf(search) >= 0 ||
+            (lead.telefono || '').indexOf(search) >= 0;
+
+        var matchesCategory = !category || lead.categoria === category;
+        var matchesStatus = !status || lead.status === status;
+        var matchesIsapre = !isapre || lead.isapreActual === isapre;
+
+        return matchesSearch && matchesCategory && matchesStatus && matchesIsapre;
+    });
+
+    currentPage = 1;
+    renderLeadsTable();
+}
+
+function clearAllFilters() {
+    document.getElementById('leadSearch').value = '';
+    document.getElementById('filterCategory').value = '';
+    document.getElementById('filterStatus').value = '';
+    document.getElementById('filterIsapre').value = '';
+    filterLeads();
+}
+
+function changePage(delta) {
+    var totalPages = Math.ceil(filteredLeads.length / leadsPerPage);
+    var newPage = currentPage + delta;
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        renderLeadsTable();
+    }
+}
+
+// ===================== ACTIONS =====================
+function contactLeadWA(leadId) {
+    var lead = allLeads.find(function(l) { return l.id === leadId; });
+    if (!lead) return;
+
+    updateLeadStatus(leadId, 'contacted');
+
+    var nombre = encodeURIComponent(lead.nombre || 'Cliente');
+    var mensaje = 'Hola ' + decodeURIComponent(nombre) + ', soy tu asesor de Plan Ya. Vi tu evaluación y tengo opciones para optimizar tu plan de ISAPRE. ¿Tienes 5 minutos para conversar?';
+    var waUrl = 'https://wa.me/56962460849?text=' + encodeURIComponent(mensaje);
+    window.open(waUrl, '_blank');
+
+    showDashToast('💬', 'WhatsApp abierto para ' + lead.nombre);
+}
+
+async function updateLeadStatus(leadId, status) {
+    var leadIndex = allLeads.findIndex(function(l) { return l.id === leadId; });
+    if (leadIndex >= 0) {
+        allLeads[leadIndex].status = status;
+        allLeads[leadIndex].updatedAt = new Date().toISOString();
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allLeads));
+    // Nota: Para actualizar en Google Sheets, hazlo manualmente desde la hoja
+    // o implementa un endpoint PATCH en Apps Script (más avanzado)
+    filterLeads();
+    updateKPIs();
+}
+
+// ===================== LEAD DETAIL MODAL =====================
+function viewLeadDetail(leadId) {
+    var lead = allLeads.find(function(l) { return l.id === leadId; });
+    if (!lead) return;
+
+    var modalBody = document.getElementById('leadModalBody');
+    var ingresos = parseInt((lead.renta || '0').replace(/\D/g, '')) || 0;
+    var pago = parseInt((lead.cuantoPagas || '0').replace(/\D/g, '')) || 0;
+    var sietePorciento = Math.round(ingresos * 0.07);
+    var ahorroEstimado = Math.max(0, pago - sietePorciento);
+
+    modalBody.innerHTML = 
+        '<div class="modal-section"><div class="modal-section-title">Información Personal</div><div class="modal-info-grid">' +
+        '<div class="modal-info-item"><div class="label">Nombre</div><div class="value">' + escapeHtml(lead.nombre || 'N/A') + '</div></div>' +
+        '<div class="modal-info-item"><div class="label">RUT</div><div class="value">' + escapeHtml(lead.rut || 'N/A') + '</div></div>' +
+        '<div class="modal-info-item"><div class="label">Edad</div><div class="value">' + (lead.edad || 'N/A') + ' años</div></div>' +
+        '<div class="modal-info-item"><div class="label">Región</div><div class="value">' + escapeHtml(getRegionName(lead.region)) + '</div></div>' +
+        '<div class="modal-info-item modal-full-width"><div class="label">Contacto</div><div class="value">' + escapeHtml(lead.email || 'N/A') + ' · ' + escapeHtml(lead.telefono || 'N/A') + '</div></div>' +
+        '</div></div>' +
+        '<div class="modal-section"><div class="modal-section-title">Situación Actual</div><div class="modal-info-grid">' +
+        '<div class="modal-info-item"><div class="label">ISAPRE Actual</div><div class="value">' + escapeHtml(getIsapreName(lead.isapreActual)) + '</div></div>' +
+        '<div class="modal-info-item"><div class="label">Pago Actual</div><div class="value">$' + pago.toLocaleString('es-CL') + '/mes</div></div>' +
+        '<div class="modal-info-item"><div class="label">Renta Mensual</div><div class="value">$' + ingresos.toLocaleString('es-CL') + '</div></div>' +
+        '<div class="modal-info-item"><div class="label">7% Legal</div><div class="value">$' + sietePorciento.toLocaleString('es-CL') + '/mes</div></div>' +
+        '<div class="modal-info-item"><div class="label">Cargas</div><div class="value">' + (lead.cargas || '0') + '</div></div>' +
+        '<div class="modal-info-item"><div class="label">Anualidad</div><div class="value">' + (lead.anualidad === 'si' ? '✅ Cumplida' : lead.anualidad === 'no' ? '⚠️ No cumplida' : 'N/A') + '</div></div>' +
+        '</div></div>' +
+        '<div class="modal-section"><div class="modal-section-title">Preferencias & Recomendación</div><div class="modal-info-grid">' +
+        '<div class="modal-info-item"><div class="label">Prioridad principal</div><div class="value">' + getPreferenciaLabel(lead.preferencia) + '</div></div>' +
+        '<div class="modal-info-item"><div class="label">Uso esperado</div><div class="value">' + getUsoFrecuenciaLabel(lead.usoFrecuencia) + '</div></div>' +
+        '<div class="modal-info-item"><div class="label">Score</div><div class="value" style="color:' + (lead.score >= 80 ? 'var(--accent)' : lead.score >= 60 ? '#F59E0B' : 'var(--error)') + ';font-size:20px;">' + lead.score + '/100</div></div>' +
+        '<div class="modal-info-item modal-full-width"><div class="label">Plan Recomendado</div><div class="value" style="color:var(--primary);font-size:16px;">' + escapeHtml(lead.planRecomendado || 'N/A') + ' (' + escapeHtml(lead.planIsapre || 'N/A') + ')</div></div>' +
+        '<div class="modal-info-item"><div class="label">Ahorro Estimado</div><div class="value" style="color:#1567FF;">$' + ahorroEstimado.toLocaleString('es-CL') + '/mes</div></div>' +
+        '<div class="modal-info-item"><div class="label">VLP Estimado</div><div class="value">$' + (lead.vlp || 0).toLocaleString('es-CL') + '/año</div></div>' +
+        '</div></div>' +
+        (lead.condiciones ? '<div class="modal-section"><div class="modal-section-title">Condiciones Preexistentes</div><div style="background:var(--bg-light);border-radius:10px;padding:14px;font-size:13px;color:var(--text-secondary);line-height:1.6;">' + escapeHtml(lead.condiciones) + '</div></div>' : '') +
+        '<div class="modal-section" style="display:flex;gap:10px;">' +
+        '<button class="action-btn action-btn-wa" style="flex:1;justify-content:center;padding:12px;" onclick="contactLeadWA(\'' + lead.id + '\');closeLeadModal();">📱 Contactar por WhatsApp</button>' +
+        '<select class="filter-select" style="flex:1;" onchange="updateLeadStatus(\'' + lead.id + '\', this.value);closeLeadModal();">' +
+        '<option value="new" ' + (lead.status === 'new' ? 'selected' : '') + '>🟢 Nuevo</option>' +
+        '<option value="contacted" ' + (lead.status === 'contacted' ? 'selected' : '') + '>🟡 Contactado</option>' +
+        '<option value="closed" ' + (lead.status === 'closed' ? 'selected' : '') + '>🔴 Cerrado</option>' +
+        '</select>' +
+        '</div>';
+
+    document.getElementById('leadModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLeadModal(event) {
+    if (event && event.target !== document.getElementById('leadModal')) return;
+    document.getElementById('leadModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function getRegionName(value) {
+    var regions = {
+        'arica': 'Arica y Parinacota', 'tarapaca': 'Tarapacá', 'antofagasta': 'Antofagasta',
+        'atacama': 'Atacama', 'coquimbo': 'Coquimbo', 'valparaiso': 'Valparaíso',
+        'metropolitana': 'Metropolitana', 'ohiggins': "O'Higgins", 'maule': 'Maule',
+        'nuble': 'Ñuble', 'biobio': 'Bío Bío', 'araucania': 'La Araucanía',
+        'rios': 'Los Ríos', 'lagos': 'Los Lagos', 'aysen': 'Aysén', 'magallanes': 'Magallanes'
+    };
+    return regions[value] || value;
+}
+
+function getIsapreName(value) {
+    var isapres = {
+        'colmena': 'Colmena', 'consalud': 'Consalud', 'cruzblanca': 'Cruz Blanca',
+        'nuevamasvida': 'Nueva Más Vida', 'vidatres': 'Vida Tres', 'esencial': 'Esencial',
+        'fonasa': 'Fonasa', 'banmedica': 'Banmedica'
+    };
+    return isapres[value] || (value ? value.charAt(0).toUpperCase() + value.slice(1) : 'N/A');
+}
+
+function getPreferenciaLabel(value) {
+    var prefs = {
+        'economica': '💰 Menor precio', 'cobertura': '🏥 Alta cobertura',
+        'red': '📍 Red de prestadores cercanos', 'odonto': '🦷 Odontología incluida',
+        'especialidades': '🎨 Especialidades amplias', 'balance': '⚖️ Balance precio-cobertura'
+    };
+    return prefs[value] || value;
+}
+
+function getUsoFrecuenciaLabel(value) {
+    var usos = {
+        'poco': '🩹 Poco — Solo emergencias',
+        'moderado': '💊 Moderado — Consultas regulares',
+        'frecuente': '🏥 Frecuente — Uso constante'
+    };
+    return usos[value] || 'No especificado';
+}
+
+// ===================== EXPORT CSV =====================
+function exportLeadsCSV() {
+    var leadsToExport = filteredLeads.length > 0 ? filteredLeads : allLeads;
+    if (leadsToExport.length === 0) {
+        showDashToast('⚠️', 'No hay leads para exportar');
+        return;
+    }
+
+    var headers = ['ID', 'Fecha', 'Nombre', 'RUT', 'Email', 'Telefono', 'Edad', 'Region', 'Renta', 'ISAPRE_Actual', 'Anualidad', 'Pago_Actual', 'Cargas', 'Preferencia', 'Uso_Frecuencia', 'Condiciones', 'Score', 'Categoria', 'Plan_Recomendado', 'ISAPRE_Recomendada', 'VLP', 'Estado'];
+
+    var rows = leadsToExport.map(function(lead) {
+            return [
+                lead.id,
+                new Date(lead.createdAt).toLocaleString('es-CL'),
+                lead.nombre || '',
+                lead.rut || '',
+                lead.email || '',
+                lead.telefono || '',
+                lead.edad || '',
+                getRegionName(lead.region),
+                lead.renta || '',
+                getIsapreName(lead.isapreActual),
+                lead.anualidad || '',
+                lead.cuantoPagas || '',
+                lead.cargas || '0',
+                getPreferenciaLabel(lead.preferencia),
+                getUsoFrecuenciaLabel(lead.usoFrecuencia),
+                (lead.condiciones || '').replace(/"/g, '""'),
+                lead.score || '0',
+                lead.categoria || '',
+                lead.planRecomendado || '',
+                lead.planIsapre || '',
+                lead.vlp || '0',
+                lead.status || 'new'
+            ];
+        });
+
+    var csvContent = [headers.join(','), rows.map(function(r) {
+        return r.map(function(cell) { return '"' + String(cell).replace(/"/g, '""') + '"'; }).join(',');
+    }).join('\n')].join('\n');
+
+    var blob = new Blob(['﻿' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'iplan_leads_' + new Date().toISOString().slice(0, 10) + '.csv';
+    link.click();
+
+    showDashToast('📥', 'CSV exportado con ' + leadsToExport.length + ' leads');
+}
+
+// ===================== TOAST =====================
+function showDashToast(icon, text) {
+    var toast = document.getElementById('dashToast');
+    document.getElementById('dashToastIcon').textContent = icon;
+    document.getElementById('dashToastText').textContent = text;
+    toast.classList.add('active');
+    setTimeout(function() { toast.classList.remove('active'); }, 3000);
+}
+
+// ===================== INIT =====================
+function initDashboardApp() {
+    checkDashboardAuth();
+    lucide.createIcons();
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDashboardApp);
+} else {
+    initDashboardApp();
+}
+  </script>
+</body>
+</html>
