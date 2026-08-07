@@ -1,0 +1,21 @@
+{
+  "name": "Plan Ya - Asesoría ISAPRE Gratuita",
+  "short_name": "Plan Ya",
+  "description": "Asesoría gratuita e independiente para cambio de ISAPRE en Chile. Compara planes y ahorra.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#1567FF",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "es-CL",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dbzmwrh5d/image/upload/v1784587413/LOGOPLANYA_nbjsoy.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "health", "utilities"]
+}

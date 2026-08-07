@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /#dashboard
+Disallow: /#asesor
+
+Sitemap: https://planya.cl/sitemap.xml
+
+# Crawl-delay: 10
+
+User-agent: Googlebot
+Allow: /
+Disallow: /dashboard
+
+User-agent: Bingbot
+Allow: /
+Disallow: /dashboard
