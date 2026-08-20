@@ -458,63 +458,78 @@ fbq('track', 'PageView');
 
 
 <style id="hero-desktop-compact-fix">
+/* ===== HERO COMPACTO EN DESKTOP — SIN REDUCIR FUENTES ===== */
 @media (min-width: 1024px) {
   #heroSection {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    min-height: 0 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
   }
-  #heroSection > div > div {
-    padding: 28px 36px !important;
-    min-height: 0 !important;
+  #heroSection > div > div.bg-\[\#111b2d\] {
+    padding: 24px 32px !important;
   }
   #heroSection .grid {
-    gap: 24px !important;
-    min-height: 0 !important;
+    gap: 20px !important;
   }
+  /* NO tocar font-size de h1, p, ni textos. Solo espaciado */
   #heroSection h1 {
-    font-size: 2.25rem !important;
-    line-height: 1.15 !important;
     margin-top: 0 !important;
-  }
-  #heroSection p {
-    margin-top: 12px !important;
-  }
-  #heroSection .hero-cta {
-    margin-top: 16px !important;
-  }
-  #heroSection .hero-social {
-    margin-top: 16px !important;
-    padding-top: 12px !important;
   }
   #heroSection .hero-badge {
     margin-bottom: 12px !important;
+    padding: 6px 12px !important;
   }
+  #heroSection p.hero-subtitle {
+    margin-top: 10px !important;
+    margin-bottom: 0 !important;
+  }
+  #heroSection .hero-cta {
+    margin-top: 14px !important;
+  }
+  #heroSection .hero-social {
+    margin-top: 14px !important;
+    padding-top: 10px !important;
+  }
+  /* Formulario derecho */
   #heroCalculator {
-    padding: 24px 28px !important;
+    padding: 20px 24px !important;
+  }
+  #heroCalculator .mb-5 {
+    margin-bottom: 12px !important;
   }
   #heroCalculator h3 {
-    margin-top: 12px !important;
-    font-size: 1.1rem !important;
+    margin-top: 8px !important;
+    font-size: inherit !important;
   }
-  #heroCalculator .space-y-4 > div {
-    margin-bottom: 8px !important;
+  #heroCalculator p {
+    margin-top: 4px !important;
   }
-  #heroCalculator label {
+  #heroCalculator .rounded-2xl.border.border-\[\#1567FF\]\/25 {
+    padding: 10px 12px !important;
+    margin-bottom: 12px !important;
+  }
+  #heroCalculator .quick-wizard-step label {
     margin-bottom: 4px !important;
+    font-size: 11px !important;
   }
-  #heroCalculator input,
-  #heroCalculator select {
+  #heroCalculator .quick-wizard-step input,
+  #heroCalculator .quick-wizard-step select {
+    padding-top: 9px !important;
+    padding-bottom: 9px !important;
+  }
+  #heroCalculator .grid.grid-cols-2 {
+    gap: 10px !important;
+  }
+  #quickWizardNav {
+    margin-top: 10px !important;
+  }
+  #quickWizardNav button {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
   }
-  #quickWizardNav {
-    margin-top: 12px !important;
-  }
 }
 @media (min-width: 1280px) {
-  #heroSection h1 {
-    font-size: 2.5rem !important;
+  #heroSection > div > div.bg-\[\#111b2d\] {
+    padding: 28px 40px !important;
   }
 }
 </style>
@@ -669,7 +684,7 @@ fbq('track', 'PageView');
     </div>
   </div>
 </div>
-<div class="space-y-4" id="quickWizard">
+<form class="space-y-4" id="quickWizard" onsubmit="return handleQuickFinalSubmit(event);" novalidate>
 <div class="quick-wizard-step" data-qstep="1">
   <div class="mb-3 text-[10px] font-bold uppercase tracking-widest text-[#38BDF8]">Tu plan actual</div>
   <label class="block text-[11px] font-bold text-slate-300 mb-1.5" for="quickIsapre">¿Dónde estás actualmente?</label>
@@ -750,7 +765,7 @@ fbq('track', 'PageView');
     <div><label class="block text-[11px] font-bold text-slate-300 mb-1.5" for="quickEmail">Email</label><input class="w-full rounded-xl bg-[#070b13] border border-[#1d2d44] px-3.5 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-[#1567FF]/60 transition-colors" id="quickEmail" placeholder="tucorreo@gmail.com" required type="email"></div>
     <div><label class="block text-[11px] font-bold text-slate-300 mb-1.5" for="quickRut">RUT <span class="text-slate-600">(opcional)</span></label><input class="w-full rounded-xl bg-[#070b13] border border-[#1d2d44] px-3.5 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-[#1567FF]/60 transition-colors" id="quickRut" maxlength="12" oninput="formatQuickRut(this)" placeholder="12.345.678-9" type="text"></div>
   </div>
-</div>
+</form>
 
 <!-- Navegación del diagnóstico de 3 pasos -->
 <div class="flex items-center gap-3 mt-5" id="quickWizardNav">
@@ -773,7 +788,7 @@ fbq('track', 'PageView');
 >Continuar →</button>
 <button
   id="quickFinalSubmitBtn"
-  type="button"
+  type="submit"
   class="meta-track-btn meta-lead-submit flex-1 hidden rounded-xl bg-gradient-to-r from-[#1567FF] to-[#00C2E0] px-5 py-3.5 text-sm font-black text-[#06101f] shadow-lg hover:-translate-y-0.5 transition-all"
   name="submit_lead"
   value="ver_mi_analisis"
@@ -785,7 +800,6 @@ fbq('track', 'PageView');
   data-testid="meta-lead-submit"
   data-meta-action="lead_submit"
   data-meta-source="quick_wizard"
-  onclick="return handleQuickFinalSubmit(event);"
 >Ver mi análisis →</button>
 </div>
 
