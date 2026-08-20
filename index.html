@@ -443,7 +443,20 @@ fbq('track', 'PageView');
   #quickWizard .quick-wizard-step[data-qstep="2"]{}
   #quickWizard .quick-wizard-step[data-qstep="2"] .mb-3{margin-bottom:8px !important;}
 }
-</style></head>
+</style>
+<style>
+@media (min-width: 768px) {
+  #hero {
+    padding-top: 42px !important;
+    padding-bottom: 42px !important;
+  }
+  #hero .hero-content {
+    min-height: 0 !important;
+  }
+}
+</style>
+
+</head>
 <body class="bg-slate-50 text-slate-900 antialiased selection:bg-[#d6e4ff] selection:text-[#0B1D3A] font-sans min-h-screen flex flex-col">
 <!-- SVG ICON SYMBOLS -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -664,7 +677,7 @@ fbq('track', 'PageView');
 <div class="flex items-center gap-3 mt-5" id="quickWizardNav">
   <button class="hidden flex-1 rounded-xl bg-[#111b2d] border border-[#1d2d44] px-4 py-3.5 text-sm font-extrabold text-slate-300 hover:border-[#1567FF]/50 transition-all" id="quickBackBtn" onclick="quickWizardBack()" type="button">← Atrás</button>
   <button class="flex-1 rounded-xl bg-gradient-to-r from-[#1567FF] to-[#00C2E0] px-5 py-3.5 text-sm font-black text-[#06101f] shadow-lg hover:-translate-y-0.5 transition-all" id="quickContinueBtn" onclick="quickWizardNext()" type="button">Continuar →</button>
-<button class="flex-1 hidden rounded-xl bg-gradient-to-r from-[#1567FF] to-[#00C2E0] px-5 py-3.5 text-sm font-black text-[#06101f] shadow-lg hover:-translate-y-0.5 transition-all" id="quickFinalSubmitBtn" onclick="quickWizardNext()" type="button" data-meta-event="Lead" data-event="Lead" data-event-name="Lead" name="submit_lead" value="ver_mi_analisis" aria-label="Ver mi análisis" data-track="lead-submit">Ver mi análisis →</button>
+<button class="flex-1 hidden rounded-xl bg-gradient-to-r from-[#1567FF] to-[#00C2E0] px-5 py-3.5 text-sm font-black text-[#06101f] shadow-lg hover:-translate-y-0.5 transition-all" onclick="if (typeof fbq === 'function') { fbq('track', 'Lead', {content_name:'lead_completo'}); } return quickWizardNext();" value="ver_mi_analisis" aria-label="Ver mi análisis" id="quickFinalSubmitBtn" class="meta-lead-submit" data-meta-event="Lead" data-event="Lead" data-event-name="Lead" data-track="lead-submit" name="submit_lead" type="button">Ver mi análisis →</button>
 </div>
 
 </div>
@@ -2182,9 +2195,6 @@ fbq('track', 'PageView');
             if (currentStep === 2) trackLeadStep(2);
             if (currentStep === 3) {
                 trackLeadContact();
-                // Dispara el Lead inmediatamente después de una validación exitosa.
-                // Esto hace que el último botón sea un punto de conversión claro para Meta.
-                trackLeadSubmit();
             }
 
             if (currentStep < totalSteps) {
